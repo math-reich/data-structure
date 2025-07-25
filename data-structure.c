@@ -17,41 +17,31 @@ typedef struct
 u32 main(int argc, char *argv[])
 {
    s8 options = -1;
-   while(options =! 0)
+   while(options != 0)
    {
-      printf("Choose the Data Structure that you would like to test:\n");
+      printf("\nChoose the Data Structure that you would like to test:\n");
       printf("1. Stack.\n");
       printf("2. Queue.\n");
       printf("3. Tree.\n");
-
       printf("0. Quit program.\n");
 
-      scanf("%d", options);
+      scanf("%hhd", &options);
 
       switch(options)
       {
          case 1:
-               printf("==// Stack //==\n");
-               printf("A stack is a data structure that works with lifo (last in first out).\n");
-               printf("So you can only add(push), or remove(pop) from the top.\n");
-               printf("To a stack of size 4 it will look somethign like this:\n\n");
-               printf("\t\t|\t\t->\t\t|\t\t->\t\t|\t\t->\t\t|\t\t->\t\t|\t\t->\t\t|\n");
-               printf("\t\t|\t\t->\t\t|\t\t->\t\t|\t\t->\t\t■\t\t->\t\t|\t\t->\t\t|\n");
-               printf("\t\t|\t\t->\t\t|\t\t->\t\t■\t\t->\t\t■\t\t->\t\t■\t\t->\t\t|\n");
-               printf("\t\t|\t\t->\t\t■\t\t->\t\t■\t\t->\t\t■\t\t->\t\t■\t\t->\t\t■\n\n");
-               printf("First, choose the starting size of the stack.\n");
-               printf("these are the possible operation:\n");
-               printf("1.pop -- removers top\n2.push -- adds top\n3.Peek -- see top value\n");
-               printf("4.isEmpty -- see if is empty\n5.isFull -- see if is full\n");
+               stack_array();
                break;
 
          case 2:
+               break;
          case 3:
+               break;
          case 0:
                printf("Quiting...\n");
                return 0;
          default:
-               printf("This is not aa valid option, try again.\n");
+               printf("This is not a valid option, try again.\n");
                break;
       }
    }
@@ -60,14 +50,39 @@ u32 main(int argc, char *argv[])
 
 // Data Structures using arrays
 
-u32 stack_array(u32 stack_size)
+u32 stack_array()
 {
+   u32 stack_size = 0;
+   printf("==// Stack //==\n");
+   printf("A stack is a data structure that works with lifo (last in first out).\n");
+   printf("So you can only add(push), or remove(pop) from the top.\n");
+   printf("To a stack of size 4 it will look somethign like this:\n\n");
+   printf("\t|\t->\t|\t->\t|\t->\t|\t->\t|\t->\t|\n");
+   printf("\t|\t->\t|\t->\t|\t->\t0\t->\t|\t->\t|\n");
+   printf("\t|\t->\t|\t->\t0\t->\t0\t->\t0\t->\t|\n");
+   printf("\t|\t->\t0\t->\t0\t->\t0\t->\t0\t->\t0\n\n");
+   printf("These are the possible operation:\n\n");
+   printf("1.pop    \tremove top\n2.push   \tadds top\n3.Peek   \tsee top value\n");
+   printf("4.isEmpty\tsee if is empty\n5.isFull \tsee if is full\n\n");
+   printf("First, choose the starting size of the stack, the amount of \"things\" that will fit inside the stack:\n");
+
+   do {
+      scanf("%u", &stack_size);
+
+      if (stack_size > MAX_CAPACITY) {
+         printf("the stack cannot be this big, the max size is 1 million");
+      }
+   } while(stack_size < 1 || stack_size > MAX_CAPACITY);
+
+   // initiates the stack
    dynamic_array stack = {
       .data = malloc(stack_size* sizeof(*stack.data)), // this sizeof() is getting u32 defined in dynamic_array
       .size = 0,
       .current_capacity = stack_size,
       .max_capacity = MAX_CAPACITY,
    };
+
+   // here implements the the functions and display to user
 
    free(stack.data);
    return 0;
