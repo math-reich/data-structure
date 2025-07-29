@@ -97,11 +97,11 @@ int stack_array()
    int choice = -1;
    printf("\nYou created a stack with %u capacity\n\n", stack_size);
    printf("choose an option:\n");
+   printf("0.list options details\n1.pop\n2.push\n3.peek\n4.isEmpty\n5.destroy");
    
    while(choice != 5)
    {
-      printf("0.list options details\n1.pop\n2.push\n3.peek\n4.isEmpty\n5.destroy");
-
+      scanf("O ERRO ESTAVA AQUI, FALTOU PEGAR VALOR DE CHOICE");
       switch(choice)
       {
          case 0:
