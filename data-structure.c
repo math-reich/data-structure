@@ -1,7 +1,7 @@
 /* data-structure.c */
 
 #include "data-structure.h"
-#include "stack.h"
+#include "stack/stack.h"
 
 // functions declarations
 int stack_array();
@@ -23,20 +23,20 @@ int main(int argc, char *argv[])
       switch(options)
       {
          case 1:
-               stack_array();
-               break;
-
+            if (stack_array() == -1)
+               return -1;
+            break;
          case 2:
-               break;
+            break;
          case 3:
-               break;
+            break;
          case 0:
-               printf("Quiting...\n");
-               return 0;
+            printf("Quiting...\n");
+            return 0;
          default:
-               printf("This is not a valid option, try again.\n");
-               break;
-      }
+            printf("This is not a valid option, try again.\n");
+            break;
+         }
    }
    return 0;
 }
@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
 int stack_array()
 {
    u32 stack_size = 0;
+   bool valid_option = false;
+   // User interface to print possibilities
    printf("==// Stack //==\n");
    printf("A stack is a data structure that works with lifo (last in first out).\n");
    printf("So you can only add(push), or remove(pop) from the top.\n");
@@ -54,22 +56,44 @@ int stack_array()
    printf("\t|\t->\t|\t->\t|\t->\t2\t->\t|\t->\t|\n");
    printf("\t|\t->\t|\t->\t1\t->\t1\t->\t1\t->\t|\n");
    printf("\t|\t->\t0\t->\t0\t->\t0\t->\t0\t->\t0\n\n");
-   printf("These are the possible operation:\n\n");
-   printf("1.pop    \tremove top\n2.push   \tadds top\n3.peek   \tsee top value\n");
-   printf("4.isEmpty\tsee if is empty\n5.destroy\tdestroy stack and go back to menu\n\n");
+   print_possible_options();
    printf("First, choose the starting size of the stack, the amount of \"things\" that will fit inside the stack:\n");
 
-   do {
+   // get stack size
+   while(valid_option == false) {
       printf("stack size: ");
-      scanf("%u", &stack_size);
+      valid_option = true;
 
-      if (stack_size > MAX_CAPACITY_STACK) {
-         printf("the stack cannot be this big, the max size is 1 million\n");
+      // see if it is a valid input
+      if (scanf("%u", &stack_size) == 1)
+      {
+         // see if number is within limits
+         if (stack_size > MAX_CAPACITY_STACK)
+         {
+            printf("the stack cannot be this big, the max size is 1 million\n");
+            valid_option = false;
+         }
+         else if (stack_size < 1)
+         {
+            printf("the stack cannot be zero or negative\n");
+            valid_option = false;
+         }
+         else
+            valid_option = true;
       }
-   } while(stack_size < 1 || stack_size > MAX_CAPACITY_STACK);
+      else
+      {
+         printf("not a valid number\n");
+         while (getchar() != '\n');
+         valid_option = false;
+      }
+   }
 
+   // creates stack and checks if it is allocated in memory
    dynamic_array* stack = array_stack_create(stack_size);
+   if (stack == NULL) return -1;
 
+   // stack possible operations
    int choice = -1;
    printf("\nYou created a stack with %u capacity\n\n", stack_size);
    printf("choose an option:\n");
@@ -80,6 +104,9 @@ int stack_array()
 
       switch(choice)
       {
+         case 0:
+               print_possible_options();
+               break;
          case 1:
                if(array_stack_pop(stack) == 0) printf("operation succeded\n");
                else printf("error, operation failed\n");
@@ -93,19 +120,22 @@ int stack_array()
                break; 
          case 3:
                array_stack_peek(stack);
+               break;
          case 4:
-               array_stack_is_empty(stack);
+               if(array_stack_is_empty(stack)) printf("Stack is empty!");
+               break;
          case 5:
                array_stack_destroy(stack);
                printf("Stack destroyed, operation successfull");
                break;
          default:
                printf("this is not a valid answer, try again\n");
+               break;
       }
    }
 
+   // not supposed to get here withou destroying stack, but for containment
    array_stack_destroy(stack);
-
    return 0;
 }
 

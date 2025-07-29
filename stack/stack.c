@@ -1,18 +1,20 @@
 #include "stack.h"
 
+const u32 MAX_CAPACITY_STACK = 1000000;
+
 // --- Dynamic Array Stack ---
 
 dynamic_array* array_stack_create(u32 initial_capacity)
 {
-   // creates the dynamic-array in memory
+   // allocates in memory the size for the enum of dynamic-array 
    dynamic_array* stack = malloc(sizeof(dynamic_array));
 
    if (stack == NULL) {
       printf("\nThe stack is null, memory error\n");
-      return 1;
+      return stack;
    }
 
-   // initiates the stack
+   // initiates the stack -> alocates the data depending on capacity
    stack->data = malloc(initial_capacity * sizeof(*stack->data)); // this sizeof() is getting u32 defined in dynamic_array
                                           // if it was stack->data it would get the size of the pointer, not the data
    stack->size = 0;
@@ -33,6 +35,36 @@ void array_stack_destroy(dynamic_array* stack)
    {
       free(stack);
    }
+}
+
+int resize_dynamic_array(dynamic_array* array)
+{
+   if(array->current_capacity == MAX_CAPACITY_STACK) return -1;
+
+   u32 new_capacity = 0; 
+   if(array->current_capacity < 10)
+   {
+      new_capacity = array->current_capacity * 2;
+   }
+   else
+   {
+      if(array->current_capacity * 1.5 > MAX_CAPACITY_STACK)
+      {
+         new_capacity = MAX_CAPACITY_STACK;
+      }
+      else new_capacity = array->current_capacity * 1.5;
+   }
+
+   u32* temp_data = realloc(array->data, new_capacity * sizeof(*array->data));
+
+   if(temp_data == NULL)
+   {
+      return -2;
+   }
+
+   array->data = temp_data;
+   array->current_capacity = new_capacity;
+   return 0;
 }
 
 int array_stack_pop(dynamic_array* stack)
@@ -83,34 +115,23 @@ bool array_stack_is_full(dynamic_array* stack)
    else return false;
 }
 
-int resize_dynamic_array(dynamic_array* array)
+int array_stack_peek(dynamic_array* stack)
 {
-   if(array->current_capacity == MAX_CAPACITY_STACK) return -1;
-
-   u32 new_capacity = 0; 
-   if(array->current_capacity < 10)
+   if (array_stack_is_empty)
    {
-      new_capacity = array->current_capacity * 2;
-   }
-   else
-   {
-      if(array->current_capacity * 1.5 > MAX_CAPACITY_STACK)
-      {
-         new_capacity = MAX_CAPACITY_STACK;
-      }
-      else new_capacity = array->current_capacity * 1.5;
+      printf("stack is empty, there is no top element\n");
+      return -1;
    }
 
-   u32* temp_data = realloc(array->data, new_capacity * sizeof(*array->data));
-
-   if(temp_data == NULL)
-   {
-      return -2;
-   }
-
-   array->data = temp_data;
-   array->current_capacity = new_capacity;
+   printf("Top element: %d", stack->data[stack->size - 1]);
    return 0;
+}
+
+void print_possible_options()
+{
+   printf("These are the possible operation:\n\n");
+   printf("1.pop    \tremove top\n2.push   \tadds top\n3.peek   \tsee top value\n");
+   printf("4.isEmpty\tsee if is empty\n5.destroy\tdestroy stack and go back to menu\n\n");
 }
 
 // --- Stack ---
