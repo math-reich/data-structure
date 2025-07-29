@@ -1,5 +1,8 @@
 /* data-structure.h */
 
+#ifndef DATA_STRUCTURE_H
+#define DATA_STRUCTURE_H
+
 #include <stdio.h>
 // #include <unistd.h>
 #include <stdlib.h>
@@ -33,6 +36,7 @@ typedef int64_t   s64;  // (-9 223 372 036 854 775 808) to (+9 223 372 036 854 7
 // u64 -    llu (long long unsigned)
 // s64 -    lld (long long decimal)
 
-u32 main(int, char**);
+int main(int, char**);
 
 // recreate my readLine function
+#endif

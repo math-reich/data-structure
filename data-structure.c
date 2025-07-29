@@ -1,22 +1,15 @@
 /* data-structure.c */
 
 #include "data-structure.h"
+#include "stack.h"
 
-// Struct and constants
-const u32 MAX_CAPACITY = 1000000;
-
-typedef struct
-{
-   u32* data;
-   u32 size;
-   u32 current_capacity;
-   u32 max_capacity;
-} dynamic_array;
+// functions declarations
+int stack_array();
 
 // --- Main function ---
-u32 main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-   s8 options = -1;
+   int options = -1;
    while(options != 0)
    {
       printf("\nChoose the Data Structure that you would like to test:\n");
@@ -25,7 +18,7 @@ u32 main(int argc, char *argv[])
       printf("3. Tree.\n");
       printf("0. Quit program.\n");
 
-      scanf("%hhd", &options);
+      scanf("%d", &options);
 
       switch(options)
       {
@@ -50,7 +43,7 @@ u32 main(int argc, char *argv[])
 
 // Data Structures using arrays
 
-u32 stack_array()
+int stack_array()
 {
    u32 stack_size = 0;
    printf("==// Stack //==\n");
@@ -58,44 +51,72 @@ u32 stack_array()
    printf("So you can only add(push), or remove(pop) from the top.\n");
    printf("To a stack of size 4 it will look somethign like this:\n\n");
    printf("\t|\t->\t|\t->\t|\t->\t|\t->\t|\t->\t|\n");
-   printf("\t|\t->\t|\t->\t|\t->\t0\t->\t|\t->\t|\n");
-   printf("\t|\t->\t|\t->\t0\t->\t0\t->\t0\t->\t|\n");
+   printf("\t|\t->\t|\t->\t|\t->\t2\t->\t|\t->\t|\n");
+   printf("\t|\t->\t|\t->\t1\t->\t1\t->\t1\t->\t|\n");
    printf("\t|\t->\t0\t->\t0\t->\t0\t->\t0\t->\t0\n\n");
    printf("These are the possible operation:\n\n");
-   printf("1.pop    \tremove top\n2.push   \tadds top\n3.Peek   \tsee top value\n");
-   printf("4.isEmpty\tsee if is empty\n5.isFull \tsee if is full\n\n");
+   printf("1.pop    \tremove top\n2.push   \tadds top\n3.peek   \tsee top value\n");
+   printf("4.isEmpty\tsee if is empty\n5.destroy\tdestroy stack and go back to menu\n\n");
    printf("First, choose the starting size of the stack, the amount of \"things\" that will fit inside the stack:\n");
 
    do {
+      printf("stack size: ");
       scanf("%u", &stack_size);
 
-      if (stack_size > MAX_CAPACITY) {
-         printf("the stack cannot be this big, the max size is 1 million");
+      if (stack_size > MAX_CAPACITY_STACK) {
+         printf("the stack cannot be this big, the max size is 1 million\n");
       }
-   } while(stack_size < 1 || stack_size > MAX_CAPACITY);
+   } while(stack_size < 1 || stack_size > MAX_CAPACITY_STACK);
 
-   // initiates the stack
-   dynamic_array stack = {
-      .data = malloc(stack_size* sizeof(*stack.data)), // this sizeof() is getting u32 defined in dynamic_array
-      .size = 0,
-      .current_capacity = stack_size,
-      .max_capacity = MAX_CAPACITY,
-   };
+   dynamic_array* stack = array_stack_create(stack_size);
 
-   // here implements the the functions and display to user
+   int choice = -1;
+   printf("\nYou created a stack with %u capacity\n\n", stack_size);
+   printf("choose an option:\n");
+   
+   while(choice != 5)
+   {
+      printf("0.list options details\n1.pop\n2.push\n3.peek\n4.isEmpty\n5.destroy");
 
-   free(stack.data);
+      switch(choice)
+      {
+         case 1:
+               if(array_stack_pop(stack) == 0) printf("operation succeded\n");
+               else printf("error, operation failed\n");
+               break;
+         case 2:
+               u32 added_int = 0;
+               printf("number to add to stack: ");
+               scanf("%u", &added_int);
+               if(array_stack_push(stack, added_int) == 0) printf("operation succeded\n");
+               else printf("error, operation failed\n");
+               break; 
+         case 3:
+               array_stack_peek(stack);
+         case 4:
+               array_stack_is_empty(stack);
+         case 5:
+               array_stack_destroy(stack);
+               printf("Stack destroyed, operation successfull");
+               break;
+         default:
+               printf("this is not a valid answer, try again\n");
+      }
+   }
+
+   array_stack_destroy(stack);
+
    return 0;
 }
 
 // Data Structure based on nodes and linked list
 
-u32 stack()
+int stack()
 {
    return 0;
 }
 
-u32 queue()
+int queue()
 {
    return 0;
 }
